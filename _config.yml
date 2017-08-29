@@ -3,16 +3,16 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
+title: Blog of Axlchen
+subtitle: 回到最初的好玩与有趣
 description:
-author: John Doe
+author: Axlchen
 language:
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://axlchen.github.com.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
