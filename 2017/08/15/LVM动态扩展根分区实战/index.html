@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>LVM动态扩展根分区实战 | Blog of Axlchen,about technology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。 不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。 无奈我又不想重新装一个系统，凭着对Linux的热情和">
+<meta name="keywords" content="LVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVM动态扩展根分区实战">
+<meta property="og:url" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/index.html">
+<meta property="og:site_name" content="Blog of Axlchen,about technology">
+<meta property="og:description" content="前言最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。 不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。 无奈我又不想重新装一个系统，凭着对Linux的热情和">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/8.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/12.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/3.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/4.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/5.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/6.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/7.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/9.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/10.png">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/11.png">
+<meta property="og:updated_time" content="2017-09-03T13:19:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LVM动态扩展根分区实战">
+<meta name="twitter:description" content="前言最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。 不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。 无奈我又不想重新装一个系统，凭着对Linux的热情和">
+<meta name="twitter:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Blog of Axlchen,about technology" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Blog of Axlchen,about technology</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">回到最初的好玩与有趣</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://axlchen.github.com.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-LVM动态扩展根分区实战" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/15/LVM动态扩展根分区实战/" class="article-date">
+  <time datetime="2017-08-14T16:49:20.000Z" itemprop="datePublished">2017-08-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      LVM动态扩展根分区实战
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。</p>
+<p>不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。</p>
+<p>无奈我又不想重新装一个系统，凭着对Linux的热情和执着，一番捣鼓之后，终于得偿所愿了。在这里记录一下，希望给以后遇到同样问题的人参考参考，再这里重新演示整个过程。（换回了自己的电脑）</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li><p>OS：OSX10.12</p>
+</li>
+<li><p>VirtualBox版本：5.1.14</p>
+</li>
+<li><p>Linux发行版：linux mint 17.3</p>
+</li>
+</ul>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><hr>
+<ol>
+<li><p>增大虚拟硬盘</p>
+<p> 使用VirtualBox提供了命令行工具VBoxManage，*unix系统应该在安装的时候直接加入了环境变量了，如果是源码安装或者win系统，这命令在安装目录下可以找到，首先列出已经安装的虚拟系统的硬盘：<code>VBoxManage list hdds</code></p>
+ <img src="/2017/08/15/LVM动态扩展根分区实战/2.png" alt="2.png" title="">
+<p> 其中uuid就是这个虚拟硬盘的标识符，然后通过modifymedium命令就可以改变硬盘的大小：VBoxManage modifymedium uuid –resize xxxx</p>
+ <img src="/2017/08/15/LVM动态扩展根分区实战/2.png" alt="1.png" title="1.png">
+<p> 现在，我把虚拟硬盘的容量扩大到14000mb</p>
+</li>
+<li><p>添加物理卷（PV）</p>
+<p> 列出现在已经有的PV：<code>sudo pvs</code></p>
+ <img src="/2017/08/15/LVM动态扩展根分区实战/8.png" alt="8.png" title="">
+<p> 可以看到现在只有一个PV</p>
+<p> 增加PV，需要用到磁盘管理工具fdisk，具体步骤</p>
+<ul>
+<li><code>sudo fdisk /dev/sda</code> (/dev/sda为对应的设备名，也可能是其它名字)</li>
+<li>按<code>n</code>新建分区</li>
+<li>一直回车选择默认</li>
+<li>按<code>t</code>改变分区的system id</li>
+<li>选择分区号</li>
+<li><p>设置分区system id为8e，其实就是设置分区类型为Linux LVM，通过<code>sudo fdisk -l</code>命令可以看到分区的类型</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/12.png" alt="12.png" title="">
+<p>下一步，重启使分区表生效</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/3.png" alt="3.png" title="">
+<p>现在，用刚才新建的分区 /dev/sda4 新建PV</p>
+<p><code>sudo pvcreate /dev/sda4</code></p>
+<p><code>sudo pvs</code></p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/4.png" alt="4.png" title="">
+<p>PV已经准备好了</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>3.扩展卷组（VG）</p>
+<p><code>sudo vgextend mint-vg /dev/sda4</code> </p>
+<p>mint-vg是卷组名，装系统的时候选LVM方式作为磁盘分区的时候默认生成的</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/5.png" alt="5.png" title="">
+<p>现在卷组已经扩展成功了</p>
+<p>4.扩展逻辑卷（LV）</p>
+<p>查看VG的剩余空间</p>
+<p><code>sudo vgdisplay</code></p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/6.png" alt="6.png" title="">
+<p>留意到Free PE一行，总共有435个空闲的PE，1.7G的空闲空间，也就是之前扩展卷组的大小</p>
+<p><code>sudo lvextend -l +435 /dev/mint-vg/root</code></p>
+<p>-l +435 表示增加435个PE，即全部剩余空间</p>
+<p>/dev/mint-vg/root 是LV path，可以通过<code>lvdisplay</code>命令查看</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/7.png" alt="7.png" title="">
+<p>逻辑卷也已经扩展成功了</p>
+<p>5.使改变生效</p>
+<p>现在用<code>df -h</code>命令查看磁盘分区的大小，可以看到根分区还是没有改变的</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/9.png" alt="9.png" title="">
+<p><code>sudo resize2fs /dev/mint-vg/root</code></p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/10.png" alt="10.png" title="">
+<p>这时再看，已经生效了</p>
+<p><strong>然而，在这个过程中，我遇到过一直扩展不生效的情况，看下面的重点部分</strong></p>
+<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><p>如果逻辑卷扩展后没有生效，则需要进入Resuce模式运行resize2fs命令来改变文件系统的大小</p>
+<p>进入Resuce模式（linux mint）：重启过程中不断按esc进入系统选择界面，在选择系统界面按e，进入启动参数设置界面，在linux开头这行最后增加“init=/bin/bash”，按ctrl+x启动系统</p>
+<img src="/2017/08/15/LVM动态扩展根分区实战/11.png" alt="11.png" title="">
+<p>如果提示Read-only file system</p>
+<p>将系统挂载成read-write：<code>mount / -o remount,rw</code></p>
+<p>这时再resize2fs便可</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://linux.cn/article-3974-1.html?pr" target="_blank" rel="external">https://linux.cn/article-3974-1.html?pr</a></li>
+<li><a href="http://blog.csdn.net/gaoming655/article/details/7993102" target="_blank" rel="external">http://blog.csdn.net/gaoming655/article/details/7993102</a></li>
+<li><a href="http://xxrenzhe.blog.51cto.com/4036116/1272838" target="_blank" rel="external">http://xxrenzhe.blog.51cto.com/4036116/1272838</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/" data-id="cj74rutcm0000ru8z0yb3f71t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LVM/">LVM</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/08/22/个人开发工具栈记录/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          个人开发工具栈记录
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">基于Glide v4.x的图片加载进度监听</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LVM/">LVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSuchFieldError/">NoSuchFieldError</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/glide/">glide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图片加载/">图片加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义控件/">自定义控件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LVM/" style="font-size: 10px;">LVM</a> <a href="/tags/NoSuchFieldError/" style="font-size: 10px;">NoSuchFieldError</a> <a href="/tags/glide/" style="font-size: 10px;">glide</a> <a href="/tags/图片加载/" style="font-size: 10px;">图片加载</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自定义控件/" style="font-size: 10px;">自定义控件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/08/22/个人开发工具栈记录/">个人开发工具栈记录</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/15/LVM动态扩展根分区实战/">LVM动态扩展根分区实战</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/">基于Glide v4.x的图片加载进度监听</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/">仿豆瓣首页弹性滑动控件</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/10/Android-NoSuchFieldError/">Android NoSuchFieldError</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Axlchen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>

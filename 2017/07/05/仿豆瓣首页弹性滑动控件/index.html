@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>仿豆瓣首页弹性滑动控件 | Blog of Axlchen,about technology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="逛豆瓣的时候看到了这样的控件，觉得挺有趣，遂模仿之 先看看原版的效果 再看看模仿的效果   分析控件结构分析 由于*ScrollView只能有一个child view，所以整个child view的结构如图，这里我选择的是LinearLayout作为最外层的布局，content为展示的可滑动的内容，“更多”滑到最右边继续滑时出现的部分，先通过margin把“更多”隐藏 还有“更多”出现时的波纹效果">
+<meta name="keywords" content="自定义控件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="仿豆瓣首页弹性滑动控件">
+<meta property="og:url" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/index.html">
+<meta property="og:site_name" content="Blog of Axlchen,about technology">
+<meta property="og:description" content="逛豆瓣的时候看到了这样的控件，觉得挺有趣，遂模仿之 先看看原版的效果 再看看模仿的效果   分析控件结构分析 由于*ScrollView只能有一个child view，所以整个child view的结构如图，这里我选择的是LinearLayout作为最外层的布局，content为展示的可滑动的内容，“更多”滑到最右边继续滑时出现的部分，先通过margin把“更多”隐藏 还有“更多”出现时的波纹效果">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/douban.gif">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/mock1.gif">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/mock2.gif">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/mock3.gif">
+<meta property="og:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/结构.png">
+<meta property="og:updated_time" content="2017-09-03T12:47:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="仿豆瓣首页弹性滑动控件">
+<meta name="twitter:description" content="逛豆瓣的时候看到了这样的控件，觉得挺有趣，遂模仿之 先看看原版的效果 再看看模仿的效果   分析控件结构分析 由于*ScrollView只能有一个child view，所以整个child view的结构如图，这里我选择的是LinearLayout作为最外层的布局，content为展示的可滑动的内容，“更多”滑到最右边继续滑时出现的部分，先通过margin把“更多”隐藏 还有“更多”出现时的波纹效果">
+<meta name="twitter:image" content="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/douban.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Blog of Axlchen,about technology" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Blog of Axlchen,about technology</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">回到最初的好玩与有趣</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://axlchen.github.com.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-仿豆瓣首页弹性滑动控件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/" class="article-date">
+  <time datetime="2017-07-05T06:30:35.000Z" itemprop="datePublished">2017-07-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      仿豆瓣首页弹性滑动控件
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>逛豆瓣的时候看到了这样的控件，觉得挺有趣，遂模仿之</p>
+<h4 id="先看看原版的效果"><a href="#先看看原版的效果" class="headerlink" title="先看看原版的效果"></a>先看看原版的效果</h4><img src="/2017/07/05/仿豆瓣首页弹性滑动控件/douban.gif" alt="douban.gif" title="">
+<h4 id="再看看模仿的效果"><a href="#再看看模仿的效果" class="headerlink" title="再看看模仿的效果"></a>再看看模仿的效果</h4><img src="/2017/07/05/仿豆瓣首页弹性滑动控件/mock1.gif" alt="mock1.gif" title="">
+<img src="/2017/07/05/仿豆瓣首页弹性滑动控件/mock2.gif" alt="mock2.gif" title="">
+<img src="/2017/07/05/仿豆瓣首页弹性滑动控件/mock3.gif" alt="mock3.gif" title="">
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="控件结构分析"><a href="#控件结构分析" class="headerlink" title="控件结构分析"></a>控件结构分析</h3><p><img src="./结构.png" alt=""></p>
+<p>由于*ScrollView只能有一个child view，所以整个child view的结构如图，这里我选择的是LinearLayout作为最外层的布局，content为展示的可滑动的内容，“更多”滑到最右边继续滑时出现的部分，先通过margin把“更多”隐藏</p>
+<p>还有“更多”出现时的波纹效果，这个效果是通过贝塞尔曲线实现的，这里的实现比较简单，只取一个控制点，y坐标的数值为height的一半，x坐标随滑动距离变化</p>
+<h3 id="关键代码"><a href="#关键代码" class="headerlink" title="关键代码"></a>关键代码</h3><p>控件的滑动效果由child view（下称wrapView）和content view（下称contentView）配合产生</p>
+<ol>
+<li>当滑动到最左边并继续滑动的时候，wrapView的scrollX变化，产生第1个gif图效果</li>
+<li>当滑动到最右边并继续滑动的时候，wrapView的scrollX先变化，当滑出到一定距离的时候，contentView的scrollX变化，产生第3个gif图效果</li>
+<li>其他情况不处理滑动，交由<code>HorizontalScrollView</code>处理</li>
+</ol>
+<p>详细参考以下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (ev.getAction()) &#123;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</div><div class="line">            mLastX = ev.getRawX();</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</div><div class="line">            <span class="keyword">float</span> mDeltaX = (ev.getRawX() - mLastX);</div><div class="line">            mLastX = ev.getRawX();</div><div class="line">            mDeltaX = mDeltaX * RATIO;</div><div class="line">            <span class="keyword">if</span> (mDeltaX &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">//不能左滑或者外层布局的scrollX &gt; 0</span></div><div class="line">                <span class="keyword">if</span> (!canScrollHorizontally(-<span class="number">1</span>) || mWrapView.getScrollX() &gt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="comment">//contentView的scrollX &gt; 0，contentView scroll，使scrollX变化</span></div><div class="line">                    <span class="keyword">if</span> (mContentView.getScrollX() &gt; <span class="number">0</span>) &#123;</div><div class="line">                        mContentView.scrollBy((<span class="keyword">int</span>) -mDeltaX, <span class="number">0</span>);</div><div class="line">                        mMsg.setText(mStringDragged);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="comment">//wrapView的scrollX &gt; 0，wrapView scroll，使scrollX变化</span></div><div class="line">                        mWrapView.scrollBy((<span class="keyword">int</span>) -mDeltaX, <span class="number">0</span>);</div><div class="line">                        mMsg.setText(mStringDragging);</div><div class="line"></div><div class="line">                        <span class="comment">//贝塞尔曲线控制点变化</span></div><div class="line">                        mControlPoint.x = (<span class="keyword">int</span>) (mRect.right - mWrapView.getScrollX() * RIPPLE_RATIO);</div><div class="line">                        mControlPoint.y = mRect.bottom / <span class="number">2</span>;</div><div class="line">                        invalidate();</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">//不能右滑或者外层布局的scrollX &lt; 0</span></div><div class="line">                <span class="keyword">if</span> (!canScrollHorizontally(<span class="number">1</span>) || mWrapView.getScrollX() &lt; <span class="number">0</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (!canScrollHorizontally(<span class="number">1</span>)) &#123;</div><div class="line">                        getDrawingRect(mRect);</div><div class="line">                    &#125;</div><div class="line">                    <span class="comment">//wrapView的scrollX &gt;= 产生"更多"动作的距离，contentView scroll，使scrollX变化</span></div><div class="line">                    <span class="keyword">if</span> (mWrapView.getScrollX() &gt;= mOffset) &#123;</div><div class="line">                        mContentView.scrollBy((<span class="keyword">int</span>) -mDeltaX, <span class="number">0</span>);</div><div class="line">                        mMsg.setText(mStringDragged);</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        <span class="comment">//wrapView的scrollX &lt; 0，wrapView scroll，使scrollX变化</span></div><div class="line">                        mWrapView.scrollBy((<span class="keyword">int</span>) -mDeltaX, <span class="number">0</span>);</div><div class="line">                        mMsg.setText(mStringDragging);</div><div class="line"></div><div class="line">                        <span class="comment">//贝塞尔曲线控制点变化</span></div><div class="line">                        mControlPoint.x = (<span class="keyword">int</span>) (mRect.right - mWrapView.getScrollX() * RIPPLE_RATIO);</div><div class="line">                        mControlPoint.y = mRect.bottom / <span class="number">2</span>;</div><div class="line">                        invalidate();</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_CANCEL:</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</div><div class="line">            checkAction();</div><div class="line">            <span class="keyword">if</span> (mWrapView.getScrollX() &lt; <span class="number">0</span>) &#123;</div><div class="line">                mScroller.startScroll(mWrapView.getScrollX(), <span class="number">0</span>, <span class="number">0</span> - mWrapView.getScrollX(), <span class="number">0</span>,</div><div class="line">                        (<span class="number">0</span> - mWrapView.getScrollX()) * <span class="number">5</span>);</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mContentView.getScrollX() &gt; <span class="number">0</span>) &#123;</div><div class="line">                mScroller.startScroll(mContentView.getScrollX() + mWrapView.getScrollX(), <span class="number">0</span>,</div><div class="line">                        <span class="number">0</span> - mContentView.getScrollX() - mWrapView.getScrollX(), <span class="number">0</span>,</div><div class="line">                        (mContentView.getScrollX() + mWrapView.getScrollX()) * <span class="number">6</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                mScroller.startScroll(mWrapView.getScrollX(), <span class="number">0</span>, <span class="number">0</span> - mWrapView.getScrollX(), <span class="number">0</span>,</div><div class="line">                        mWrapView.getScrollX() * <span class="number">5</span>);</div><div class="line">            &#125;</div><div class="line">            invalidate();</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(ev);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>松手后复原的滑动效果使用<code>Scroller</code>完成，读者可参考相关文档和文章</p>
+<h3 id="源码和demo"><a href="#源码和demo" class="headerlink" title="源码和demo"></a>源码和demo</h3><p>github:<a href="https://github.com/Axlchen/horizontal-elasticity-scrollview" target="_blank" rel="external">horizontal-elasticity-scrollview</a></p>
+<p>欢迎交流</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://axlchen.github.com.io/2017/07/05/仿豆瓣首页弹性滑动控件/" data-id="cj74rutd00006ru8z1o9an134" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/自定义控件/">自定义控件</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          基于Glide v4.x的图片加载进度监听
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/04/10/Android-NoSuchFieldError/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Android NoSuchFieldError</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LVM/">LVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSuchFieldError/">NoSuchFieldError</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/glide/">glide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图片加载/">图片加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义控件/">自定义控件</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/LVM/" style="font-size: 10px;">LVM</a> <a href="/tags/NoSuchFieldError/" style="font-size: 10px;">NoSuchFieldError</a> <a href="/tags/glide/" style="font-size: 10px;">glide</a> <a href="/tags/图片加载/" style="font-size: 10px;">图片加载</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自定义控件/" style="font-size: 10px;">自定义控件</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/08/22/个人开发工具栈记录/">个人开发工具栈记录</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/15/LVM动态扩展根分区实战/">LVM动态扩展根分区实战</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/">基于Glide v4.x的图片加载进度监听</a>
+          </li>
+        
+          <li>
+            <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/">仿豆瓣首页弹性滑动控件</a>
+          </li>
+        
+          <li>
+            <a href="/2017/04/10/Android-NoSuchFieldError/">Android NoSuchFieldError</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Axlchen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
