@@ -2,7 +2,7 @@
 title: {{ title }}
 date: {{ date }}
 updated:
-comments:
+comments: true
 categories:
 tags:
 ---
