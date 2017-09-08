@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://axlchen.github.com.io
+url: https://axlchen.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -79,3 +79,8 @@ theme: landscape
 deploy:
   type: git
   repo: https://github.com/Axlchen/axlchen.github.io
+
+sitemap:
+  path: googlesitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
