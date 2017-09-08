@@ -9,26 +9,26 @@
 <meta name="keywords" content="LVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LVM动态扩展根分区实战">
-<meta property="og:url" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/index.html">
+<meta property="og:url" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/index.html">
 <meta property="og:site_name" content="Blog of Axlchen,about technology">
 <meta property="og:description" content="前言最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。 不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。 无奈我又不想重新装一个系统，凭着对Linux的热情和">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/8.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/12.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/3.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/4.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/5.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/6.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/7.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/9.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/10.png">
-<meta property="og:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/11.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/8.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/12.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/3.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/4.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/5.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/6.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/7.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/9.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/10.png">
+<meta property="og:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/11.png">
 <meta property="og:updated_time" content="2017-09-03T13:19:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LVM动态扩展根分区实战">
 <meta name="twitter:description" content="前言最近希望在工作电脑上下载android源码，但因为平时工作的电脑运行的是win7系统，无法下载android源码，所以想到了在VirtualBox上的Linux系统上下载。 不过，android源码体积随着版本升高已经越来越大了，一不小心就占据了几十个G，当初在虚拟机上装的系统只预留了20G左右，并且是使用了LVM技术的，还是挂载在根分区。 无奈我又不想重新装一个系统，凭着对Linux的热情和">
-<meta name="twitter:image" content="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/2.png">
+<meta name="twitter:image" content="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/2.png">
   
     <link rel="alternate" href="/atom.xml" title="Blog of Axlchen,about technology" type="application/atom+xml">
   
@@ -75,7 +75,7 @@
         <a id="nav-search-btn" class="nav-icon" title="Search"></a>
       </nav>
       <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://axlchen.github.com.io"></form>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://axlchen.github.io"></form>
       </div>
     </div>
   </div>
@@ -188,7 +188,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://axlchen.github.com.io/2017/08/15/LVM动态扩展根分区实战/" data-id="cj7c0m6m40001f18z2c3ntfbu" class="article-share-link">Share</a>
+      <a data-url="https://axlchen.github.io/2017/08/15/LVM动态扩展根分区实战/" data-id="cj7c0s4tq0001fo8z0q9uswqp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LVM/">LVM</a></li></ul>
