@@ -5,12 +5,16 @@
   
   <title>Blog of Axlchen,about technology</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="google-site-verification: googleee5117ce9fa8e815.html">
+<meta property="og:type" content="website">
 <meta property="og:title" content="Blog of Axlchen,about technology">
-<meta property="og:url" content="https://axlchen.github.com.io/page/2/index.html">
+<meta property="og:url" content="https://axlchen.github.com.io/googleee5117ce9fa8e815.html">
 <meta property="og:site_name" content="Blog of Axlchen,about technology">
+<meta property="og:description" content="google-site-verification: googleee5117ce9fa8e815.html">
+<meta property="og:updated_time" content="2017-09-08T14:39:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Blog of Axlchen,about technology">
+<meta name="twitter:description" content="google-site-verification: googleee5117ce9fa8e815.html">
   
     <link rel="alternate" href="/atom.xml" title="Blog of Axlchen,about technology" type="application/atom+xml">
   
@@ -63,74 +67,32 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Android-NoSuchFieldError" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/04/10/Android-NoSuchFieldError/" class="article-date">
-  <time datetime="2017-04-10T13:48:08.000Z" itemprop="datePublished">2017-04-10</time>
+    <a href="/googleee5117ce9fa8e815.html" class="article-date">
+  <time datetime="2017-09-08T14:39:18.000Z" itemprop="datePublished">2017-09-08</time>
 </a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-  </div>
-
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/10/Android-NoSuchFieldError/">Android NoSuchFieldError</a>
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <p>前几天在开发的时候，把一个library搬到了一个新的工程中，然后在主应用模块中调用library的Activity，发现出现了NoSuchFieldError:</p>
-<img src="/2017/04/10/Android-NoSuchFieldError/error.png" alt="error.png" title="">
-<p>然而，查看代码明明是没有问题的，layout文件存在且id正确，R文件也正常。</p>
-<p>后来在StackOverFlow上找到了答案，原因是主应用模块和library里面的layout文件重名了，把其中一个名字改了就正常运行。后来写了个小demo重现了错误并分析了一下打包的apk</p>
-<blockquote>
-<p>主模块和library模块里新建相同名字的layout文件，但两者不同，如图所示</p>
-</blockquote>
-<ul>
-<li>主模块的文件</li>
-</ul>
-<img src="/2017/04/10/Android-NoSuchFieldError/list1.png" alt="list1.png" title="">
-<ul>
-<li>library的文件</li>
-</ul>
-<img src="/2017/04/10/Android-NoSuchFieldError/list2.png" alt="list2.png" title="">
-<p>最后在打包生成的apk文件中，这个名字的layout文件只有一个，并且是主模块的layout文件</p>
-<img src="/2017/04/10/Android-NoSuchFieldError/result.png" alt="result.png" title="">
-<p>另外，apk文件中的resources.arsc文件中的id确实没有library中定义的id</p>
-<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>Android的打包机制决定了不能有同名的layout文件，故只能避免模块之间文件的重名</p>
-
+        google-site-verification: googleee5117ce9fa8e815.html
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://axlchen.github.com.io/2017/04/10/Android-NoSuchFieldError/" data-id="cj74sbwag0001298ztpfv9m6t" class="article-share-link">Share</a>
+      <a data-url="https://axlchen.github.com.io/googleee5117ce9fa8e815.html" data-id="cj7bzrdea0000c48z44vaslu4" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NoSuchFieldError/">NoSuchFieldError</a></li></ul>
-
     </footer>
   </div>
   
+    
+  
 </article>
 
-
-  
-
-
-  <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/">&laquo; __('prev')</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
 </section>
         
           <aside id="sidebar">
