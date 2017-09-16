@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Axlchen" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Android Studio/Intellij IDEA插件开发1之插件介绍与环境搭建｜Axlchen&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://axlchen.github.io/2017/09/16/Android-Studio-Intellij-IDEA插件开发1之插件介绍与环境搭建/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Axlchen
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Android Studio/Intellij IDEA插件开发1之插件介绍与环境搭建</h1>
+                    
+                    <span class="meta">
+                         作者 Axlchen
+                        <span>
+                          日期 2017-09-16
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#插件"
+                           title="插件">插件</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Android Studio/Intellij IDEA插件开发1之插件介绍与环境搭建
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>我们每天都在使用Android Studio进行开发，测试，review。在这过程中，免不了接触到各种IDE插件来帮助我们的工作，包括Android Studio本身其实就是在Intellij IDEA的基础上添加各种插件以及针对性的优化形成的。所以其实为Android Studio开发插件，其实很多情况下也适用于Itellij IDEA（只要没有依赖特定平台的特性）。那么，既然插件这么厉害，为什么我们不去自己学着写一写呢？</p>
+<h3 id="什么是插件"><a href="#什么是插件" class="headerlink" title="什么是插件"></a>什么是插件</h3><p><a href="./https://zh.wikipedia.org/wiki/%E6%8F%92%E4%BB%B6">维基百科</a>上关于插件的定义如下：</p>
+<blockquote>
+<p>插件（又译外挂，英文为Plug-in、Plugin、add-in、addin、add-on、addon或extension）是一种电脑程序，通过和应用程序（例如网页浏览器，电子邮件客户端）的互动，用来替应用程序增加一些所需要的特定的功能。最常见的有游戏、网页浏览器的插件和媒体播放器的插件。</p>
+<p>应用程序之所以支持插件的使用原因很多，主要包括：使得第三方的开发者可以对应用程序进行扩充、精简，或者将源代码从应用程序中分离出来，去除因软件使用权限而产生的不兼容。</p>
+</blockquote>
+<h3 id="插件的类型"><a href="#插件的类型" class="headerlink" title="插件的类型"></a>插件的类型</h3><p>依据官方文档的说法，主要有以下4中类型的插件</p>
+<ol>
+<li><p>Custom language support</p>
+<p> 运用Intellij平台的强大的开放性和扩展性，添加对一种编程语言的支持，如文件识别，词法分析，语法高亮，代码补全，语法检查等等，我使用过或著名的这类型的比较出名的插件有</p>
+<p> <a href="https://plugins.jetbrains.com/plugin/7793-markdown-support" target="_blank" rel="external">markdown-support</a></p>
+<p> <a href="https://plugins.jetbrains.com/plugin/4230-bashsupport" target="_blank" rel="external">bashsupport</a></p>
+<p> <a href="https://plugins.jetbrains.com/plugin/6954-kotlin" target="_blank" rel="external">kotlin</a></p>
+<p> <a href="https://plugins.jetbrains.com/plugin/1347-scala" target="_blank" rel="external">scala</a></p>
+</li>
+<li><p>Framework integration</p>
+<p> 整个编程框架的功能，这种插件进行web开发的话会接触的更多，Android开发的话，本身Android插件就是一个最好的例子</p>
+</li>
+<li><p>Tool integration</p>
+<p> 在IDE内与第三方工具交互，例如如果我们的开发电脑的usb被禁或没有数据线的话可以用以下插件</p>
+<p> <a href="https://plugins.jetbrains.com/plugin/7380-adb-idea" target="_blank" rel="external">adb-wifi</a></p>
+</li>
+<li><p>User interface add-ons</p>
+<p> 改变IDE的界面，例如各种主题插件</p>
+</li>
+</ol>
+<p>实际上，还有各种类型的扩展平台功能的插件，在官方插件网站上列出的插件种类有如下图列出的这么多种</p>
+<p><img src="./categories.png" alt=""></p>
+<h3 id="插件能干什么"><a href="#插件能干什么" class="headerlink" title="插件能干什么"></a>插件能干什么</h3><p>实际上，插件的类型的部分就很好的解答了这个问题。通过应用插件，IDE可以为我们构建开发环境、可以整合我们与优秀的工具，如git，可以批量生成代码，减少重复的敲样板代码，可以帮助我们寻找代码的问题，提高代码的质量……</p>
+<h3 id="Intellij插件开发与Android-Application开发的对比"><a href="#Intellij插件开发与Android-Application开发的对比" class="headerlink" title="Intellij插件开发与Android Application开发的对比"></a>Intellij插件开发与Android Application开发的对比</h3><p>作为一个Android开发者，从Android Application开发的角度来类比就最恰当不过了。为Intellij平台写插件就好像为Android平台写应用。Intellij这个平台就相当于一个系统，插件就是各种应用程序，Intellij平台向外提供各种API来改变它的UI和行为，给开发者使用。</p>
+<p>而事实上，Intellij插件开发的框架架构和Android应用程序有挺大的相似之处</p>
+<ul>
+<li><p>插件组件 <code>vs</code> Android 四大组件</p>
+<p>  Intellij提供了Action、Extension、（Application/Project/Module）conponent、Service等插件的组件，像Android四大组件一样，这些组件都需要在plugin.xml文件了注册，这些基本的组件了插件的主要功能</p>
+</li>
+<li><p>UI component <code>vs</code> View/widget</p>
+<p>  UI界面的基本组件</p>
+</li>
+<li><p>plugin.xml <code>vs</code> AndroidManifest.xml</p>
+<p>  plugin.xml就是插件的说明文件，提供了插件所有的基本信息：名字、作者、联系方式、使用说明，最重要的是插件组件的声明，想AndroidManifest.xml文件一样，Intellij通过这个文件读取并收集插件的信息，在适当时候调用通过plugin.xml注册的组件的功能。</p>
+</li>
+</ul>
+<h3 id="插件开发环境搭建"><a href="#插件开发环境搭建" class="headerlink" title="插件开发环境搭建"></a>插件开发环境搭建</h3><p>进行Intellij平台的插件开发，应该先安装如下的软件或下载相关代码</p>
+<ul>
+<li>JDK(Java相关的开发，这个必备了)</li>
+<li><a href="https://www.jetbrains.com/idea/download/#section=mac" target="_blank" rel="external">Intellij IDEA Community</a></li>
+<li>Gradle(可选)</li>
+<li><a href="http://www.jetbrains.org/intellij/sdk/docs/basics/checkout_and_build_community.html" target="_blank" rel="external">Intellij IDEA Community源码</a>（可选，不过最好有）</li>
+</ul>
+<h4 id="使用Plugin-DevKit"><a href="#使用Plugin-DevKit" class="headerlink" title="使用Plugin DevKit"></a>使用Plugin DevKit</h4><p>Intellij IDEA提供了一个工具专门给开发者开发插件，值得一提的是，Plugin DevKit本身也是插件，不得不说Intellij功能真的是强大。</p>
+<p>此种方式建立插件工程比较简单 File-&gt;new-&gt;project,打开new project对话框，在左边选择Intellij Platform Plugin后一直确认即可</p>
+<p><img src="./1.png" alt=""></p>
+<p>Plugin DevKit的使用比较简单，这里不再叙述，下面重点说说用为插件工程引入gradle构建的功能</p>
+<h4 id="创建Project-SDK"><a href="#创建Project-SDK" class="headerlink" title="创建Project SDK"></a>创建Project SDK</h4><p>在上图所示创建项目的时候，有个Project SDK的选项。写插件的时候，我们不只依赖JDK了，毕竟我们要用到Intellij IDEA的API。这时用到的是Plugin SDK，如果还没有的话，点击new新建，选择 <code>Intellij Platform Plugin SDK</code>，路径选择你的Intellij IDEA的安装目录。</p>
+<h4 id="关联源码"><a href="#关联源码" class="headerlink" title="关联源码"></a>关联源码</h4><ol>
+<li><p>下载源码<br><code>git clone --depth 1 git://git.jetbrains.org/idea/community.git idea</code></p>
+</li>
+<li><p>创建工程后，依次点击File / Project Structure / SDKs，选择Plugin SDK，点击SourcePath，按“+”号选择源码目录</p>
+</li>
+</ol>
+<p><img src="./3.png" alt=""></p>
+<h4 id="使用gradle构建"><a href="#使用gradle构建" class="headerlink" title="使用gradle构建"></a>使用gradle构建</h4><p>其实环境搭建这样基本的开发步骤，本来是不想讲的，不过，官网关于使用gradle的说明非常简要并且我发现其实有问题的，在多次碰壁和阅读其他插件的源码才搞明白怎样使用，详细步骤如下</p>
+<ul>
+<li>创建一个gradle工程，在上图的左边选择<code>Gradle</code>，按提示完成</li>
+<li><p>在build.gradle文件加入如下内容</p>
+<pre><code>buildscript {
+    repositories {
+        maven {
+            url &quot;https://plugins.gradle.org/m2/&quot;
+        }
+        maven {
+            url &apos;http://dl.bintray.com/jetbrains/intellij-plugin-service&apos;
+        }
+
+    }
+    dependencies {
+        classpath &quot;gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.1.10&quot;
+    }
+}
+
+apply plugin: &apos;org.jetbrains.intellij&apos;
+</code></pre></li>
+</ul>
+<p>此时编译工程，其实是无法构建的，因为还没有用到intellij这个gradle插件的命令，加入如下内容即可</p>
+<pre><code>intellij {
+    plugins &apos;android&apos; //使用android插件
+    version &apos;IC-2016.2.5&apos; //指明使用的Intellij IDEA版本
+    pluginName &apos;xxxx&apos; //插件名字
+    alternativeIdePath &apos;path to android studio&apos;//如果想在Android Studio里运行，给出Android Studio的路径
+    //下面两个选项跟适配Intellij的版本有关，具体可查看官网
+    updateSinceUntilBuild = false
+    sameSinceUntilBuild = false
+}        
+</code></pre><p>其中最重要的是<code>version</code>这一项，如果注释掉这一项的话，gradle默认去下载最新版本的Intellij IDEA源码，麻烦的地方就在此，<strong>每次有版本更新，编译时就会去下载源码，即使本地仓库已经有这个依赖</strong>，所以最好指定一个版本的源码，避免多次下载源码，并且有时下载的速度很慢。</p>
+<p>在官网上可以查看详细的<a href="https://www.jetbrains.com/intellij-repository/releases" target="_blank" rel="external">版本列表</a></p>
+<p>如果在右侧gradle的tool view里看到tasks里有intellij的选项</p>
+<p><img src="./2.png" alt=""></p>
+<p>双击runIdea或者命令行输入<code>gradle runIdea</code>，即可构建插件</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/08/22/个人开发工具栈记录/" data-toggle="tooltip" data-placement="top"
+                           title="个人开发工具栈记录">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是插件"><span class="toc-text">什么是插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插件的类型"><span class="toc-text">插件的类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插件能干什么"><span class="toc-text">插件能干什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Intellij插件开发与Android-Application开发的对比"><span class="toc-text">Intellij插件开发与Android Application开发的对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插件开发环境搭建"><span class="toc-text">插件开发环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用Plugin-DevKit"><span class="toc-text">使用Plugin DevKit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建Project-SDK"><span class="toc-text">创建Project SDK</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#关联源码"><span class="toc-text">关联源码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用gradle构建"><span class="toc-text">使用gradle构建</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#插件"
+                           title="插件">插件</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/CAxlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/axl-chenone">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Axlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Axlchen 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://axlchen.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
+</body>
+
+</html>

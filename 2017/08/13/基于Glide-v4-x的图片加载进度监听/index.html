@@ -1,103 +1,177 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  <title>基于Glide v4.x的图片加载进度监听 | Blog of Axlchen,about technology</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Glide是一款优秀的图片加载框架，简单的配置便可以使用起来，为开发者省下了很多的功夫。不过，它没有提供其加载图片进度的api，对于这样的需求，实现起来还真颇费一番周折。 尝试遇到这个需求，第一反应是网上肯定有人实现过，不妨借鉴一下别人的经验。 Glide加载图片实现进度条效果 可惜，这个实现是基于3.7版本的，4.0版本以上的glide改动比较大，using函数已经被移除了  using()">
-<meta name="keywords" content="glide,图片加载">
-<meta property="og:type" content="article">
-<meta property="og:title" content="基于Glide v4.x的图片加载进度监听">
-<meta property="og:url" content="https://axlchen.github.io/2017/08/13/基于Glide-v4-x的图片加载进度监听/index.html">
-<meta property="og:site_name" content="Blog of Axlchen,about technology">
-<meta property="og:description" content="Glide是一款优秀的图片加载框架，简单的配置便可以使用起来，为开发者省下了很多的功夫。不过，它没有提供其加载图片进度的api，对于这样的需求，实现起来还真颇费一番周折。 尝试遇到这个需求，第一反应是网上肯定有人实现过，不妨借鉴一下别人的经验。 Glide加载图片实现进度条效果 可惜，这个实现是基于3.7版本的，4.0版本以上的glide改动比较大，using函数已经被移除了  using()">
-<meta property="og:updated_time" content="2017-09-03T13:02:51.000Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="基于Glide v4.x的图片加载进度监听">
-<meta name="twitter:description" content="Glide是一款优秀的图片加载框架，简单的配置便可以使用起来，为开发者省下了很多的功夫。不过，它没有提供其加载图片进度的api，对于这样的需求，实现起来还真颇费一番周折。 尝试遇到这个需求，第一反应是网上肯定有人实现过，不妨借鉴一下别人的经验。 Glide加载图片实现进度条效果 可惜，这个实现是基于3.7版本的，4.0版本以上的glide改动比较大，using函数已经被移除了  using()">
-  
-    <link rel="alternate" href="/atom.xml" title="Blog of Axlchen,about technology" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
-  
+<html lang="en">
 
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword" content="">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Axlchen" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        基于Glide v4.x的图片加载进度监听｜Axlchen&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://axlchen.github.io/2017/08/13/基于Glide-v4-x的图片加载进度监听/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
 </head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Blog of Axlchen,about technology</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">回到最初的好玩与有趣</a>
-        </h2>
-      
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Axlchen
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://axlchen.github.io"></form>
-      </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>基于Glide v4.x的图片加载进度监听</h1>
+                    
+                    <span class="meta">
+                         作者 Axlchen
+                        <span>
+                          日期 2017-08-13
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#glide"
+                           title="glide">glide</a>
+                        
+                        <a class="tag" href="/tags/#图片加载"
+                           title="图片加载">图片加载</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+    <div class="post-title-haojen">
+        <span>
+            基于Glide v4.x的图片加载进度监听
+        </span>
+    </div>
 </header>
-      <div class="outer">
-        <section id="main"><article id="post-基于Glide-v4-x的图片加载进度监听" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/" class="article-date">
-  <time datetime="2017-08-13T07:48:23.000Z" itemprop="datePublished">2017-08-13</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-  </div>
 
-    <span id="busuanzi_container_page_pv">
-    本文总阅读量<span id="busuanzi_value_page_pv"></span>次
-    </span>
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
-      基于Glide v4.x的图片加载进度监听
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Glide是一款优秀的图片加载框架，简单的配置便可以使用起来，为开发者省下了很多的功夫。不过，它没有提供其加载图片进度的api，对于这样的需求，实现起来还真颇费一番周折。</p>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Glide是一款优秀的图片加载框架，简单的配置便可以使用起来，为开发者省下了很多的功夫。不过，它没有提供其加载图片进度的api，对于这样的需求，实现起来还真颇费一番周折。</p>
 <h2 id="尝试"><a href="#尝试" class="headerlink" title="尝试"></a>尝试</h2><p>遇到这个需求，第一反应是网上肯定有人实现过，不妨借鉴一下别人的经验。</p>
 <p><a href="http://www.jianshu.com/p/548031c62257" target="_blank" rel="external">Glide加载图片实现进度条效果</a></p>
 <p>可惜，这个实现是基于3.7版本的，4.0版本以上的glide改动比较大，using函数已经被移除了</p>
@@ -115,168 +189,222 @@
 <p>所以，能监听到图片的下载进度就大概是图片的加载进度了。那难道要先下载图片再交给glide去加载？不用，glide支持整合其他网络模块，例如OkHttp，并且如果我们愿意的话，也可以利用其接口实现自己的网络加载模块。</p>
 <p>glide官方仓库提供了OkHttp的整合模块，于是乎我去这些代码了寻找一下突破口。</p>
 <h2 id="突破"><a href="#突破" class="headerlink" title="突破"></a>突破</h2><p>OkHttp模块是非常简单的，只有4个文件，并且文件都不长<br>首先，用过glide的都知道，继承GlideModule的类是用于设置glide的配置信息和加载模块的，在OkHttpGlideModule里，向系统注册了一个用于加载GlideUrl类型的组件，简单的可以理解为加载网络图片的组件。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpGlideModule</span> <span class="keyword">implements</span> <span class="title">GlideModule</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpGlideModule</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyOptions</span><span class="params">(Context context, GlideBuilder builder)</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerComponents</span><span class="params">(Context context, Glide glide, Registry registry)</span> </span>&#123;</div><div class="line">        registry.replace(GlideUrl.class, InputStream.class, <span class="keyword">new</span> OkHttpUrlLoader.Factory());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpGlideModule</span> <span class="keyword">implements</span> <span class="title">GlideModule</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpGlideModule</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">applyOptions</span><span class="params">(Context context, GlideBuilder builder)</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerComponents</span><span class="params">(Context context, Glide glide, Registry registry)</span> </span>&#123;</div><div class="line">        registry.replace(GlideUrl.class, InputStream.class, <span class="keyword">new</span> OkHttpUrlLoader.Factory());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>OkHttpLoader文件也很简单，实现了ModelLoader接口，这里ModelLoader是glide的抽象的资源loader的表示，例如这里，就是说加载GlideUrl的model，返回InputStream，即图片的输入流。关于Glide的loadData、model、fetch的详细介绍，可以查看<a href="http://bumptech.github.io/glide/" target="_blank" rel="external">官方文档</a></p>
 <p>OkHttpLoader的最终目的，也就是返回了一个LoadData对象。现在情况明确了，glide框架就是利用这个LoadData对象得到图片的输入流，从而下载图片并经过一系列的解码，裁剪，缓存等操作，最后加载出来的。LoadData的参数有一个OkHttpStreamFetcher，从名字看来，这里一定就是下载图片的地方了，我们继续看下去。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpUrlLoader</span> <span class="keyword">implements</span> <span class="title">ModelLoader</span>&lt;<span class="title">GlideUrl</span>, <span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> okhttp3.Call.Factory client;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpUrlLoader</span><span class="params">(okhttp3.Call.Factory client)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.client = client;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">handles</span><span class="params">(GlideUrl url)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> LoadData&lt;InputStream&gt; <span class="title">buildLoadData</span><span class="params">(GlideUrl model, <span class="keyword">int</span> width, <span class="keyword">int</span> height, Options options)</span> </span>&#123;</div><div class="line">    	<span class="comment">//返回LoadData对象，泛型为InputStream</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LoadData(model, <span class="keyword">new</span> OkHttpStreamFetcher(<span class="keyword">this</span>.client, model));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Factory</span> <span class="keyword">implements</span> <span class="title">ModelLoaderFactory</span>&lt;<span class="title">GlideUrl</span>, <span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> okhttp3.Call.Factory internalClient;</div><div class="line">        <span class="keyword">private</span> okhttp3.Call.Factory client;</div><div class="line"></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> okhttp3.Call.<span class="function">Factory <span class="title">getInternalClient</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span>(internalClient == <span class="keyword">null</span>) &#123;</div><div class="line">                Class var0 = OkHttpUrlLoader.Factory.class;</div><div class="line">                <span class="keyword">synchronized</span>(OkHttpUrlLoader.Factory.class) &#123;</div><div class="line">                    <span class="keyword">if</span>(internalClient == <span class="keyword">null</span>) &#123;</div><div class="line">                        internalClient = <span class="keyword">new</span> OkHttpClient();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> internalClient;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Factory</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>(getInternalClient());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Factory</span><span class="params">(okhttp3.Call.Factory client)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.client = client;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> ModelLoader&lt;GlideUrl, InputStream&gt; <span class="title">build</span><span class="params">(MultiModelLoaderFactory multiFactory)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> OkHttpUrlLoader(<span class="keyword">this</span>.client);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">teardown</span><span class="params">()</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpUrlLoader</span> <span class="keyword">implements</span> <span class="title">ModelLoader</span>&lt;<span class="title">GlideUrl</span>, <span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> okhttp3.Call.Factory client;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpUrlLoader</span><span class="params">(okhttp3.Call.Factory client)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.client = client;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">handles</span><span class="params">(GlideUrl url)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> LoadData&lt;InputStream&gt; <span class="title">buildLoadData</span><span class="params">(GlideUrl model, <span class="keyword">int</span> width, <span class="keyword">int</span> height, Options options)</span> </span>&#123;</div><div class="line">    	<span class="comment">//返回LoadData对象，泛型为InputStream</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> LoadData(model, <span class="keyword">new</span> OkHttpStreamFetcher(<span class="keyword">this</span>.client, model));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Factory</span> <span class="keyword">implements</span> <span class="title">ModelLoaderFactory</span>&lt;<span class="title">GlideUrl</span>, <span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> okhttp3.Call.Factory internalClient;</div><div class="line">        <span class="keyword">private</span> okhttp3.Call.Factory client;</div><div class="line"></div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> okhttp3.Call.<span class="function">Factory <span class="title">getInternalClient</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span>(internalClient == <span class="keyword">null</span>) &#123;</div><div class="line">                Class var0 = OkHttpUrlLoader.Factory.class;</div><div class="line">                <span class="keyword">synchronized</span>(OkHttpUrlLoader.Factory.class) &#123;</div><div class="line">                    <span class="keyword">if</span>(internalClient == <span class="keyword">null</span>) &#123;</div><div class="line">                        internalClient = <span class="keyword">new</span> OkHttpClient();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">return</span> internalClient;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Factory</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>(getInternalClient());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Factory</span><span class="params">(okhttp3.Call.Factory client)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.client = client;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> ModelLoader&lt;GlideUrl, InputStream&gt; <span class="title">build</span><span class="params">(MultiModelLoaderFactory multiFactory)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> OkHttpUrlLoader(<span class="keyword">this</span>.client);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">teardown</span><span class="params">()</span> </span>&#123;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>可以看到，所有的重点都在loadData函数里面了，用过OkHttp的同学，有没有觉得好简单？哈哈。<br>这里直接得到图片的InputStream然后通过回调函数callback.onDataReady()返回了<br>问题来了，callback的glide框架里传过来的，我们并不能控制，我尝试找了一下调用loadData的地方，结果没有找到。怎么办？看最终的实现吧。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpStreamFetcher</span> <span class="keyword">implements</span> <span class="title">DataFetcher</span>&lt;<span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"OkHttpFetcher"</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Factory client;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> GlideUrl url;</div><div class="line">    InputStream stream;</div><div class="line">    ResponseBody responseBody;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> Call call;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpStreamFetcher</span><span class="params">(Factory client, GlideUrl url)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.client = client;</div><div class="line">        <span class="keyword">this</span>.url = url;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">(Priority priority, <span class="keyword">final</span> DataCallback&lt;? <span class="keyword">super</span> InputStream&gt; callback)</span> </span>&#123;</div><div class="line">        Builder requestBuilder = (<span class="keyword">new</span> Builder()).url(<span class="keyword">this</span>.url.toStringUrl());</div><div class="line">        Iterator request = <span class="keyword">this</span>.url.getHeaders().entrySet().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(request.hasNext()) &#123;</div><div class="line">            Entry headerEntry = (Entry)request.next();</div><div class="line">            String key = (String)headerEntry.getKey();</div><div class="line">            requestBuilder.addHeader(key, (String)headerEntry.getValue());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        Request request1 = requestBuilder.build();</div><div class="line">        <span class="keyword">this</span>.call = <span class="keyword">this</span>.client.newCall(request1);</div><div class="line">        <span class="keyword">this</span>.call.enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span>(Log.isLoggable(<span class="string">"OkHttpFetcher"</span>, <span class="number">3</span>)) &#123;</div><div class="line">                    Log.d(<span class="string">"OkHttpFetcher"</span>, <span class="string">"OkHttp failed to obtain result"</span>, e);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                callback.onLoadFailed(e);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody = response.body();</div><div class="line">                <span class="keyword">if</span>(response.isSuccessful()) &#123;</div><div class="line">                    <span class="keyword">long</span> contentLength = OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody.contentLength();</div><div class="line">                    OkHttpStreamFetcher.<span class="keyword">this</span>.stream = ContentLengthInputStream.obtain(OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody.byteStream(), contentLength);</div><div class="line">                    callback.onDataReady(OkHttpStreamFetcher.<span class="keyword">this</span>.stream);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    callback.onLoadFailed(<span class="keyword">new</span> HttpException(response.message(), response.code()));</div><div class="line">                &#125;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.stream != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">this</span>.stream.close();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException var2) &#123;</div><div class="line">            ;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.responseBody != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.responseBody.close();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        Call local = <span class="keyword">this</span>.call;</div><div class="line">        <span class="keyword">if</span>(local != <span class="keyword">null</span>) &#123;</div><div class="line">            local.cancel();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Class&lt;InputStream&gt; <span class="title">getDataClass</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> InputStream.class;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">getDataSource</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> DataSource.REMOTE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OkHttpStreamFetcher</span> <span class="keyword">implements</span> <span class="title">DataFetcher</span>&lt;<span class="title">InputStream</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"OkHttpFetcher"</span>;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Factory client;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> GlideUrl url;</div><div class="line">    InputStream stream;</div><div class="line">    ResponseBody responseBody;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> Call call;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OkHttpStreamFetcher</span><span class="params">(Factory client, GlideUrl url)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.client = client;</div><div class="line">        <span class="keyword">this</span>.url = url;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">loadData</span><span class="params">(Priority priority, <span class="keyword">final</span> DataCallback&lt;? <span class="keyword">super</span> InputStream&gt; callback)</span> </span>&#123;</div><div class="line">        Builder requestBuilder = (<span class="keyword">new</span> Builder()).url(<span class="keyword">this</span>.url.toStringUrl());</div><div class="line">        Iterator request = <span class="keyword">this</span>.url.getHeaders().entrySet().iterator();</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(request.hasNext()) &#123;</div><div class="line">            Entry headerEntry = (Entry)request.next();</div><div class="line">            String key = (String)headerEntry.getKey();</div><div class="line">            requestBuilder.addHeader(key, (String)headerEntry.getValue());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        Request request1 = requestBuilder.build();</div><div class="line">        <span class="keyword">this</span>.call = <span class="keyword">this</span>.client.newCall(request1);</div><div class="line">        <span class="keyword">this</span>.call.enqueue(<span class="keyword">new</span> Callback() &#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call call, IOException e)</span> </span>&#123;</div><div class="line">                <span class="keyword">if</span>(Log.isLoggable(<span class="string">"OkHttpFetcher"</span>, <span class="number">3</span>)) &#123;</div><div class="line">                    Log.d(<span class="string">"OkHttpFetcher"</span>, <span class="string">"OkHttp failed to obtain result"</span>, e);</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                callback.onLoadFailed(e);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onResponse</span><span class="params">(Call call, Response response)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">                OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody = response.body();</div><div class="line">                <span class="keyword">if</span>(response.isSuccessful()) &#123;</div><div class="line">                    <span class="keyword">long</span> contentLength = OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody.contentLength();</div><div class="line">                    OkHttpStreamFetcher.<span class="keyword">this</span>.stream = ContentLengthInputStream.obtain(OkHttpStreamFetcher.<span class="keyword">this</span>.responseBody.byteStream(), contentLength);</div><div class="line">                    callback.onDataReady(OkHttpStreamFetcher.<span class="keyword">this</span>.stream);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    callback.onLoadFailed(<span class="keyword">new</span> HttpException(response.message(), response.code()));</div><div class="line">                &#125;</div><div class="line"></div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cleanup</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.stream != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">this</span>.stream.close();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException var2) &#123;</div><div class="line">            ;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.responseBody != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">this</span>.responseBody.close();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        Call local = <span class="keyword">this</span>.call;</div><div class="line">        <span class="keyword">if</span>(local != <span class="keyword">null</span>) &#123;</div><div class="line">            local.cancel();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Class&lt;InputStream&gt; <span class="title">getDataClass</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> InputStream.class;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">getDataSource</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> DataSource.REMOTE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>在loadData函数里，有这样一句代码</p>
 <blockquote>
 <p>OkHttpStreamFetcher.this.stream = ContentLengthInputStream.obtain(OkHttpStreamFetcher.this.responseBody.byteStream(), contentLength);</p>
 </blockquote>
 <p>ContentLengthInputStream是glide的工具类，用来读取输入流的，点进去看看，发现有几个read方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> value = <span class="keyword">super</span>.read();</div><div class="line">    <span class="keyword">this</span>.checkReadSoFarOrThrow(value &gt;= <span class="number">0</span>?<span class="number">1</span>:-<span class="number">1</span>);</div><div class="line">    <span class="keyword">return</span> value;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] buffer)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.read(buffer, <span class="number">0</span>, buffer.length);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] buffer, <span class="keyword">int</span> byteOffset, <span class="keyword">int</span> byteCount)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.checkReadSoFarOrThrow(<span class="keyword">super</span>.read(buffer, byteOffset, byteCount));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> value = <span class="keyword">super</span>.read();</div><div class="line">    <span class="keyword">this</span>.checkReadSoFarOrThrow(value &gt;= <span class="number">0</span>?<span class="number">1</span>:-<span class="number">1</span>);</div><div class="line">    <span class="keyword">return</span> value;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] buffer)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.read(buffer, <span class="number">0</span>, buffer.length);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] buffer, <span class="keyword">int</span> byteOffset, <span class="keyword">int</span> byteCount)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.checkReadSoFarOrThrow(<span class="keyword">super</span>.read(buffer, byteOffset, byteCount));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>所以，我的解决方法就是在这里计算下载进度和进行进度的报告的，把这个类从源码里拷贝出来，替换掉OkHttp模块里面的ContentLengthInputStream，并在这插入自己的下载进度逻辑就行了。<br>具体的代码实现就不贴出来了，写个大概的思路：</p>
 <p>下载图片的时候传入图片进度监听，用集合容器，例如map保存监听的实例，key为url，下载过程中计算下载进度后通过url找到对应的回调返回进度，图片加载完毕后将回调从集合了移除（glide提供了图片加载完毕的回调）。</p>
 <p>ok，就这样，有不合理的地方欢迎指出，又更好更优雅的实现方式请不吝指教。</p>
 
-      
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/08/15/LVM动态扩展根分区实战/" data-toggle="tooltip" data-placement="top"
+                           title="LVM动态扩展根分区实战">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/" data-toggle="tooltip" data-placement="top"
+                           title="仿豆瓣首页弹性滑动控件">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#尝试"><span class="toc-text">尝试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#突破"><span class="toc-text">突破</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现"><span class="toc-text">实现</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#glide"
+                           title="glide">glide</a>
+                        
+                        <a class="tag" href="/tags/#图片加载"
+                           title="图片加载">图片加载</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
     </div>
-    <footer class="article-footer">
-      <a data-url="https://axlchen.github.io/2017/08/13/基于Glide-v4-x的图片加载进度监听/" data-id="cj7c19b3i0006hn8zucxgkca8" class="article-share-link">Delen</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/glide/">glide</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/图片加载/">图片加载</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2017/08/15/LVM动态扩展根分区实战/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Nieuwer</strong>
-      <div class="article-nav-title">
-        
-          LVM动态扩展根分区实战
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ouder</strong>
-      <div class="article-nav-title">仿豆瓣首页弹性滑动控件</div>
-    </a>
-  
-</nav>
-
-  
 </article>
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categorieën</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/CAxlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/axl-chenone">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Axlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Axlchen 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
     </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/LVM/">LVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NoSuchFieldError/">NoSuchFieldError</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/glide/">glide</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/图片加载/">图片加载</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自定义控件/">自定义控件</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/LVM/" style="font-size: 10px;">LVM</a> <a href="/tags/NoSuchFieldError/" style="font-size: 10px;">NoSuchFieldError</a> <a href="/tags/glide/" style="font-size: 10px;">glide</a> <a href="/tags/图片加载/" style="font-size: 10px;">图片加载</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自定义控件/" style="font-size: 10px;">自定义控件</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">July 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">April 2017</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2017/08/22/个人开发工具栈记录/">个人开发工具栈记录</a>
-          </li>
-        
-          <li>
-            <a href="/2017/08/15/LVM动态扩展根分区实战/">LVM动态扩展根分区实战</a>
-          </li>
-        
-          <li>
-            <a href="/2017/08/13/基于Glide-v4-x的图片加载进度监听/">基于Glide v4.x的图片加载进度监听</a>
-          </li>
-        
-          <li>
-            <a href="/2017/07/05/仿豆瓣首页弹性滑动控件/">仿豆瓣首页弹性滑动控件</a>
-          </li>
-        
-          <li>
-            <a href="/2017/04/10/Android-NoSuchFieldError/">Android NoSuchFieldError</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2017 Axlchen<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-<span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
 </footer>
 
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://axlchen.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<!-- Baidu Tongji -->
 
 
-<script src="/js/script.js"></script>
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
 
-  </div>
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
 </body>
+
 </html>
