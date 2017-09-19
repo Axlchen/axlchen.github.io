@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Axlchen的技术博客">
+    <meta name="keyword" content="Axlchen,Android,Linux,Java,hexo">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Axlchen" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Android Studio/Intellij IDEA插件开发2之Action System｜Axlchen&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://axlchen.github.io/2017/09/17/Android-Studio-Intellij-IDEA插件开发2之Action-System/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('https://avatars2.githubusercontent.com/u/12019318?v=4&amp;s=460')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Axlchen
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="http://7xlhug.com1.z0.glb.clouddn.com/header-bg.png">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('http://7xlhug.com1.z0.glb.clouddn.com/header-bg.png?imageView2/1/w/1400/h/400/interlace/1/q/90')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Android Studio/Intellij IDEA插件开发2之Action System</h1>
+                    
+                    <span class="meta">
+                         作者 Axlchen
+                        <span>
+                          日期 2017-09-17
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Android Studio插件开发"
+                           title="Android Studio插件开发">Android Studio插件开发</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Android Studio/Intellij IDEA插件开发2之Action System
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>Action System包含最基础的Action，还有Action Group</p>
+<h2 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h2><h3 id="什么是Action"><a href="#什么是Action" class="headerlink" title="什么是Action"></a>什么是Action</h3><p>我们自己的代码逻辑，在IDE的运行环境下执行，我们的代码便成了它的“插件”，可是怎样才能让IDE执行我们的代码逻辑？Intellij提供了一个很基础的组件 – Action。</p>
+<p>Action，直译就是动作，是我们最常见到的组件，也是最普通的代码执行的入口。</p>
+<p><strong>所有菜单和工具栏的点击按钮背后就是一个Action</strong></p>
+<p>所以我一般都把它想象成Android里的OnClickListener。同样地，要自定义自己的Action，只需要继承<code>AnAction</code>类并把逻辑放在<code>actionPerformed</code>方法即可。</p>
+<h3 id="最简单的Action"><a href="#最简单的Action" class="headerlink" title="最简单的Action"></a>最简单的Action</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">public class SimpleAction extends AnAction &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">   	public void actionPerformed(AnActionEvent e) &#123;</div><div class="line">      	// TODO: insert action logic here</div><div class="line">      	System.out.println(&quot;This is an action&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上一篇文章说过，Action是需要在plugin.xml注册的，所以，要让这个Action跑起来，还需要在plugin.xml的<code>actions</code>标签添加以下内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;action id=&quot;MyPlugin.SimpleAction&quot; class=&quot;SimpleAction&quot; text=&quot;logAction&quot; description=&quot;just log to console&quot;&gt;</div><div class="line">      &lt;add-to-group group-id=&quot;HelpMenu&quot; anchor=&quot;first&quot;/&gt;</div><div class="line">&lt;/action&gt;</div></pre></td></tr></table></figure>
+<p>解释一下<code>action</code>标签的属性的含义</p>
+<ul>
+<li>id:这个Action的唯一标识，所有的id不能重复，IDE通过id区分不同的Action</li>
+<li>class:这个Action的类</li>
+<li>text:这个Action显示在菜单或工具栏上的文字</li>
+<li>description:这个Action的描述</li>
+</ul>
+<p>然后编译运行：</p>
+<ul>
+<li>如果没有用gradle点击运行按钮即可</li>
+<li>使用了gradle<ul>
+<li>点击gradle的tool window，找到Tasks / intellij / runIdea，双击<code>runIdea</code></li>
+<li>命令行执行 <code>gradle runIdea</code>（gradle得在你的PATH里）</li>
+</ul>
+</li>
+</ul>
+<p><strong>后文将默认使用gradle</strong></p>
+<p>一切正常的话，一个新的IDE实例便会运行起来，运行的版本取决于你在build.gradle指定的版本</p>
+<p>现在，在Help菜单栏的第一个条目就是我们的Action</p>
+<p><img src="./2.png" alt=""></p>
+<p>点击logAction，在控制台（我们编译插件的IDE实例）就能看到输出</p>
+<p><img src="./1.png" alt=""></p>
+<h3 id="新建Action向导"><a href="#新建Action向导" class="headerlink" title="新建Action向导"></a>新建Action向导</h3><p>新建一个Action那么麻烦，Intellij那些聪明的工程师怎么会无动于衷！</p>
+<p>Plugin Dev插件提供了一个新建Action的向导，好像新建Activity那样方便简单，填写好相关信息，Action类和plugin.xml就还帮我们建好啦</p>
+<p><img src="./3.png" alt=""></p>
+<p><img src="./4.png" alt=""></p>
+<h3 id="更新Action的状态"><a href="#更新Action的状态" class="headerlink" title="更新Action的状态"></a>更新Action的状态</h3><p>Action中除了<code>actionPerformed</code>外也值得关注的就是<code>update</code>方法了，系统通过调用Action的update方法得到Action的状态，从而决定怎样在菜单上显示Action</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public void update(AnActionEvent e) &#123;</div><div class="line">    Editor editor = e.getData(PlatformDataKeys.EDITOR);</div><div class="line">    if (editor != null) &#123;</div><div class="line">        int lineCount = editor.getDocument().getLineCount();</div><div class="line">        if (lineCount &gt; 20) &#123;</div><div class="line">            e.getPresentation().setEnabled(true);</div><div class="line">        &#125; else &#123;</div><div class="line">            e.getPresentation().setEnabled(false);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码块意思是当前editor打开的文件的行数大于20行才使Action可用，否则不可用，Action不可用的话是会变灰色的</p>
+<p><img src="./8.png" alt=""></p>
+<p>Presentation还有一系列方法改变Action的“外貌”：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">presentation.setDescription();</div><div class="line">presentation.setIcon();</div><div class="line">presentation.setText();</div><div class="line">presentation.setVisible();</div></pre></td></tr></table></figure>
+<h2 id="Action-Group"><a href="#Action-Group" class="headerlink" title="Action Group"></a>Action Group</h2><p>Action Group含有一个或几个Action Item，每一个Action都属于一个Action Group。Action Group可以被添加到菜单栏的最顶层，也可以被添加到其他Action Group，预设的Action Group非常多，除了菜单栏上的File、Edit、View等等外，还有很多Intellij已经定义的Action Group，如上图New Action向导所示，Groups滚动框下拉，可以看到非常多的Action Group。</p>
+<p>现在，手动定义一个Action Group</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;actions&gt;</div><div class="line">    &lt;group id=&quot;com.example.actiongroup&quot; text=&quot;Action Group&quot; description=&quot;this is a action group&quot;&gt;</div><div class="line">    &lt;/group&gt;</div><div class="line">&lt;/actions&gt;</div></pre></td></tr></table></figure>
+<p><code>&lt;group&gt;</code>标签同样要被包裹在<code>actions</code>标签内，id是注册Action时的要添加进的Group的id，现在往<code>com.example.actiongroup</code>的Group里加入Action</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;group id=&quot;com.example.actiongroup&quot; text=&quot;Action Group&quot; description=&quot;this is a action group&quot;&gt;</div><div class="line">    &lt;action class=&quot;GroupAction&quot; id=&quot;com.example.actiongroup.groupaction&quot; text=&quot;A Action in Group&quot; /&gt;</div><div class="line">    &lt;add-to-group group-id=&quot;MainMenu&quot;/&gt;</div><div class="line">&lt;/group&gt;</div></pre></td></tr></table></figure>
+<p><code>&lt;action&gt;</code>直接写在<code>&lt;group&gt;</code>内的话就默认是加入这个group了，同样，group也要add到已有的group里面，才能让它在菜单里显示出来。这里加入的是主菜单，也就是最顶层的菜单，运行效果如下</p>
+<p><img src="./5.png" alt=""></p>
+<h3 id="次级菜单展开"><a href="#次级菜单展开" class="headerlink" title="次级菜单展开"></a>次级菜单展开</h3><p>现在添加次级菜单如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;group id=&quot;com.example.actiongroup&quot; text=&quot;Action Group&quot; description=&quot;this is a action group&quot;&gt;</div><div class="line">    &lt;action class=&quot;GroupAction&quot; id=&quot;com.example.actiongroup.groupaction&quot; text=&quot;A Action in Group&quot;/&gt;</div><div class="line"></div><div class="line">    &lt;group id=&quot;com.example.subgroup&quot; text=&quot;Sub Group&quot;&gt;</div><div class="line">        &lt;action class=&quot;GroupAction2&quot; id=&quot;com.example.actiongroup.groupaction2&quot; text=&quot;A Action2 in Group&quot;/&gt;</div><div class="line">    &lt;/group&gt;</div><div class="line"></div><div class="line">    &lt;add-to-group group-id=&quot;MainMenu&quot;/&gt;</div><div class="line">&lt;/group&gt;</div></pre></td></tr></table></figure>
+<p>可是结果是这样的</p>
+<p><img src="./6.png" alt=""></p>
+<p>运行结果和我们的直觉不一样啊！！要如我们所愿，像次级菜单展开的话，还需要设置一个popup属性，把subgroup的popup属性设置为true即可破之</p>
+<p><img src="./7.png" alt=""></p>
+<h3 id="添加分隔线"><a href="#添加分隔线" class="headerlink" title="添加分隔线"></a>添加分隔线</h3><p>为相似功能的菜单项添加分隔线很简单，在<code>&lt;group&gt;</code>下添加<code>&lt;separator/&gt;</code>标签即可</p>
+<h3 id="引用Action"><a href="#引用Action" class="headerlink" title="引用Action"></a>引用Action</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;group id=&quot;com.example.actiongroup&quot; text=&quot;Action Group&quot; description=&quot;this is a action group&quot;&gt;</div><div class="line">    &lt;action class=&quot;GroupAction&quot; id=&quot;com.example.actiongroup.groupaction&quot; text=&quot;A Action in Group&quot;/&gt;</div><div class="line"></div><div class="line">    &lt;group id=&quot;com.example.subgroup&quot; text=&quot;Sub Group&quot; popup=&quot;true&quot;&gt;</div><div class="line">        &lt;action class=&quot;GroupAction2&quot; id=&quot;com.example.actiongroup.groupaction2&quot; text=&quot;A Action2 in Group&quot;/&gt;</div><div class="line">    &lt;/group&gt;</div><div class="line">    </div><div class="line">    &lt;separator/&gt;</div><div class="line">    &lt;reference ref=&quot;$Cut&quot;/&gt;</div><div class="line">    &lt;add-to-group group-id=&quot;MainMenu&quot;/&gt;</div><div class="line">&lt;/group&gt;</div></pre></td></tr></table></figure>
+<p><code>&lt;reference&gt;</code>用于引用已有的Action，包括系统定义的和插件定义的Action，如上所示添加了剪切的Action</p>
+<p><strong>同级的Action不可引用</strong></p>
+<p>与<code>&lt;reference&gt;</code>定义在同一个级别的Action不可以被引用，上面的代码块中GroupAction是不可以被引用的，但是GroupAction2可以被引用</p>
+<h3 id="更新Action-Group状态"><a href="#更新Action-Group状态" class="headerlink" title="更新Action Group状态"></a>更新Action Group状态</h3><p>Action Group同样通过<code>update</code>方法更新状态，不过首先先要给Action Group指定一个class，class继承<code>DefaultActionGroup</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">&lt;group id=&quot;com.example.actiongroup&quot; class=&quot;MyActionGroup&quot; text=&quot;Action Group&quot; description=&quot;this is a action group&quot;&gt;</div><div class="line">    &lt;action class=&quot;GroupAction&quot; id=&quot;com.example.actiongroup.groupaction&quot; text=&quot;A Action in Group&quot;/&gt;</div><div class="line"></div><div class="line">    &lt;group id=&quot;com.example.subgroup&quot; text=&quot;Sub Group&quot; popup=&quot;true&quot;&gt;</div><div class="line">        &lt;action class=&quot;GroupAction2&quot; id=&quot;com.example.actiongroup.groupaction2&quot; text=&quot;A Action2 in Group&quot;/&gt;</div><div class="line">    &lt;/group&gt;</div><div class="line">    &lt;separator/&gt;</div><div class="line">    &lt;reference ref=&quot;$Cut&quot;/&gt;</div><div class="line">    &lt;reference ref=&quot;com.example.actiongroup.groupaction2&quot;/&gt;</div><div class="line">    &lt;add-to-group group-id=&quot;MainMenu&quot;/&gt;</div><div class="line">&lt;/group&gt;</div></pre></td></tr></table></figure>
+<p>改变text和可用性</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@Override</div><div class="line">public void update(AnActionEvent e) &#123;</div><div class="line">    e.getPresentation().setText(&quot;disable group&quot;);</div><div class="line">    e.getPresentation().setEnabled(false);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="./9.png" alt=""></p>
+<h3 id="动态添加Action"><a href="#动态添加Action" class="headerlink" title="动态添加Action"></a>动态添加Action</h3><p>如果需要Action Group的Action随条件的不同而不同，同样需要设置group的class，不过扩展于<code>ActionGroup</code>类，并复写<code>getChildren</code>方法，即可动态的提供Action</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">@NotNull</div><div class="line">@Override</div><div class="line">public AnAction[] getChildren(AnActionEvent anActionEvent) &#123;</div><div class="line">    return new AnAction[]&#123;new MyAction()&#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/16/Android-Studio-Intellij-IDEA插件开发1之插件介绍与环境搭建/" data-toggle="tooltip" data-placement="top"
+                           title="Android Studio/Intellij IDEA插件开发1之插件介绍与环境搭建">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Action"><span class="toc-text">Action</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是Action"><span class="toc-text">什么是Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最简单的Action"><span class="toc-text">最简单的Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建Action向导"><span class="toc-text">新建Action向导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新Action的状态"><span class="toc-text">更新Action的状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Action-Group"><span class="toc-text">Action Group</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#次级菜单展开"><span class="toc-text">次级菜单展开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加分隔线"><span class="toc-text">添加分隔线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用Action"><span class="toc-text">引用Action</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新Action-Group状态"><span class="toc-text">更新Action Group状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态添加Action"><span class="toc-text">动态添加Action</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Android Studio插件开发"
+                           title="Android Studio插件开发">Android Studio插件开发</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/CAxlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/axl-chenone">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Axlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Axlchen 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://axlchen.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="https://avatars2.githubusercontent.com/u/12019318?v=4&amp;s=460">
+</body>
+
+</html>
