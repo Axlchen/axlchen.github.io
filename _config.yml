@@ -3,12 +3,22 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Blog of Axlchen,about technology
+title: Axlchen # your blog title name
 subtitle: 回到最初的好玩与有趣
-description:
-author: Axlchen
-language:
-timezone:
+author: Axlchen # 作者
+language: 
+timezone: 
+
+# custom Site settings
+# more detail check out docs
+SEOTitle: Axlchen's blog 
+header-img: https://avatars2.githubusercontent.com/u/12019318?v=4&s=460 
+email: axlchen@outlook.com
+description: Axlchen的技术博客
+keyword: Axlchen,Android,Linux,Java,hexo # seo key words
+
+favicon: # your favicon png
+# custom end
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -16,6 +26,49 @@ url: https://axlchen.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
+
+# SNS settings
+# RSS:
+#weibo_username: haojen
+zhihu_username: axl-chenone 
+github_username: Axlchen
+twitter_username: CAxlchen
+facebook_username:  
+linkedin_username:  
+
+# Build settings
+anchorjs: false                        # if you want to customize anchor. check out line:181 of `post.html`
+
+
+# Disqus settings 
+disqus_username: 
+
+# Duoshuo settings
+duoshuo_username:  # 你的多说帐号
+# Share component is depend on Comment so we can NOT use share only.
+duoshuo_share: false                     # set to false if you want to use Comment without Sharing
+
+# Use livere
+use_livere: true
+livere_uid: MTAyMC8zMDk4OS83NTM4
+
+# Analytics settings
+# Baidu Analytics
+ba_track_id: 88fbc32936e8b8a463853c518c838608
+# Google Analytics
+ga_track_id:             # Format: UA-xxxxxx-xx
+ga_domain:
+
+# Sidebar settings
+sidebar-about-description: 回到最初的好玩与有趣 # 个人描述
+sidebar-avatar: https://avatars2.githubusercontent.com/u/12019318?v=4&s=460   #use absolu te URL
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+# friends
+friends:  # 友链
 
 # Directory
 source_dir: source
@@ -39,19 +92,10 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace:
-  
-# Home page setting
-# path: Root path for your blogs index page. (default = '')
-# per_page: Posts displayed per page. (0 = disable pagination)
-# order_by: Posts order. (Order by date descending by default)
-index_generator:
-  path: ''
-  per_page: 4
-  order_by: -date
-  
+
 # Category & Tag
 default_category: uncategorized
 category_map:
@@ -66,19 +110,53 @@ time_format: HH:mm:ss
 
 # Pagination
 ## Set per_page to 0 to disable pagination
-per_page: 6
+per_page: 5
 pagination_dir: page
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
+
+markdown:
+  plugins:
+    - markdown-it-abbr
+    - markdown-it-footnote
+    - markdown-it-ins
+    - markdown-it-sub
+    - markdown-it-sup
+    - markdown-it-emoji
+
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: Anisina
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
   repo: https://github.com/Axlchen/axlchen.github.io
+#  branch: 
+
+
+# img CDN path
+cdn-url: http://7xlhug.com1.z0.glb.clouddn.com/  # 你的CDN地址
+
+# Qiniu imageView2 API
+# More info http://developer.qiniu.com/code/v6/api/kodo-api/image/imageview2.html
+clip-content: "?imageView2/1/w/1400/h/400/interlace/1/q/90"
+clip-avatar: "?imageView2/2/w/300/h/300/interlace/1/q/90"
+clip-home-post-bg: "?imageView2/1/w/800/h/300/interlace/1/q/70"
+
+# post default images
+post-default-img:  #博文默认的图片
+post-default-img-mobile: #移动端显示的图片
+
+# search api , set your custom key
+swiftype_key: 
+
+
+# archive page title 
+archive:
+    title: archives
+    description: 可以根据归档日期检索所有文件
 
 sitemap:
   path: googlesitemap.xml

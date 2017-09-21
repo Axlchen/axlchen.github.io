@@ -3,6 +3,7 @@ title: LVM动态扩展根分区实战
 comments: true
 date: 2017-08-15 00:49:20
 updated:
+header-img: lvm.png
 categories: Linux
 tags: LVM
 ---
