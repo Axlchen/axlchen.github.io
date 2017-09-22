@@ -17,7 +17,7 @@ email: axlchen@outlook.com
 description: Axlchen的技术博客
 keyword: Axlchen,Android,Linux,Java,hexo # seo key words
 
-favicon: # your favicon png
+favicon: http://7xlhug.com1.z0.glb.clouddn.com/favicon.ico  # your favicon png
 # custom end
 
 # URL
@@ -61,7 +61,7 @@ ga_domain:
 
 # Sidebar settings
 sidebar-about-description: 回到最初的好玩与有趣 # 个人描述
-sidebar-avatar: https://avatars2.githubusercontent.com/u/12019318?v=4&s=460   #use absolu te URL
+sidebar-avatar: http://7xlhug.com1.z0.glb.clouddn.com/portrait.jpg #use absolu 0te URL
 
 # Featured Tags
 featured-tags: true                     # whether or not using Feature-Tags
