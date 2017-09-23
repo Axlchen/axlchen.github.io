@@ -1,5 +1,5 @@
 ---
-title: Android Studio/Intellij IDEA插件开发1之插件介绍与环境搭建
+title: Android Studio插件开发1之插件介绍与环境搭建
 comments: true
 date: 2017-09-16 12:12:28
 updated: 

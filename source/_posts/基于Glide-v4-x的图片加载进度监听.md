@@ -3,6 +3,7 @@ title: 基于Glide v4.x的图片加载进度监听
 comments: true
 date: 2017-08-13 15:48:23
 updated:
+header-img: glide.png
 categories: Android
 tags: 
 - glide

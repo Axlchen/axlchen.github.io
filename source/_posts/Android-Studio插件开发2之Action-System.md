@@ -1,5 +1,5 @@
 ---
-title: Android Studio/Intellij IDEA插件开发2之Action System
+title: Android Studio插件开发2之Action System
 comments: true
 date: 2017-09-17 13:51:18
 updated:
