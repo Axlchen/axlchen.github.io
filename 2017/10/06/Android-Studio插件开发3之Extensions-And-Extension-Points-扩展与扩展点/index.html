@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Axlchen的技术博客">
+    <meta name="keyword" content="Axlchen,Android,Linux,Java,hexo">
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="http://7xlhug.com1.z0.glb.clouddn.com/favicon.ico">
+    <link rel="alternate" type="application/atom+xml" title="Axlchen" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Android Studio插件开发3之Extensions And Extension Points(扩展与扩展点)｜Axlchen&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://axlchen.github.io/2017/10/06/Android-Studio插件开发3之Extensions-And-Extension-Points-扩展与扩展点/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('http://7xlhug.com1.z0.glb.clouddn.com/portrait.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Axlchen
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/tags/">tags</a>
+                        </li>
+							
+						
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="http://7xlhug.com1.z0.glb.clouddn.com/header-bg.png">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('http://7xlhug.com1.z0.glb.clouddn.com/header-bg.png?imageView2/1/w/1400/h/400/interlace/1/q/90')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Android Studio插件开发3之Extensions And Extension Points(扩展与扩展点)</h1>
+                    
+                    <span class="meta">
+                         作者 Axlchen
+                        <span>
+                          日期 2017-10-06
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Android Studio插件开发"
+                           title="Android Studio插件开发">Android Studio插件开发</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Android Studio插件开发3之Extensions And Extension Points(扩展与扩展点)
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>如果说自己定义Action并实现相应的功能逻辑是造轮子的话，那么实现Extensions就是使用别人的轮子了，简单快速实现复杂的功能！</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>Extensions 和Extension Points是Intellij平台提供的一套供插件之间或者是插件与平台核心功能之间通信的接口。</p>
+<h3 id="Extension-points"><a href="#Extension-points" class="headerlink" title="Extension points"></a>Extension points</h3><p>一个插件提供给其它插件扩展自己功能的入口点，通过定义接口来约定沟通的方法，通俗点说就是造好轮子等别人来用。</p>
+<h3 id="Extensions"><a href="#Extensions" class="headerlink" title="Extensions"></a>Extensions</h3><p>一个插件声明一个Extension，并通过对应的Extension Point实现相应的功能，通俗的说就是复用别人造好的轮子。</p>
+<h3 id="关系图"><a href="#关系图" class="headerlink" title="关系图"></a>关系图</h3><p>如果文字表达得不够明白，看一下以下的说明图应该能加深理解，毕竟一图胜千言</p>
+<p><img src="./说明图.png" alt=""></p>
+<h2 id="声明Extension和Extension-Point"><a href="#声明Extension和Extension-Point" class="headerlink" title="声明Extension和Extension Point"></a>声明Extension和Extension Point</h2><p>Extension和Extension Point都需要在plugin.xml声明，声明的语法如下</p>
+<h3 id="Extension-Point"><a href="#Extension-Point" class="headerlink" title="Extension Point"></a>Extension Point</h3><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">extensionPoints</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">extensionPoint</span> <span class="attr">name</span>=<span class="string">"ConcreteExtensionPoint1"</span> <span class="attr">beanClass</span>=<span class="string">"com.example.BeanClass"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">extensionPoint</span> <span class="attr">name</span>=<span class="string">"ConcreteExtensionPoint2"</span> <span class="attr">interface</span>=<span class="string">"com.example.Interface"</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">extensionPoints</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>name 此Extension Point的名字</li>
+<li>beanClass/interface 提供的接口，定义与Extension的交互方式</li>
+</ul>
+<p>Extension Point声明的方式有两种，第一是通过<code>interface</code>的方式，此方式定义一个java接口供扩展方实现；第二是<code>beanClass</code>的方式，其定义一个java bean，并在扩展方声明Extension的时候，由扩展方提供java bean的属性，这里不明白的话先看下面Extension的声明。</p>
+<h3 id="Extension"><a href="#Extension" class="headerlink" title="Extension"></a>Extension</h3><h3 id="声明通过interface方式定义的Extension"><a href="#声明通过interface方式定义的Extension" class="headerlink" title="声明通过interface方式定义的Extension"></a>声明通过<code>interface</code>方式定义的Extension</h3><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">extensions</span> <span class="attr">defaultExtensionNs</span>=<span class="string">"com.intellij"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">appStarter</span> <span class="attr">implementation</span>=<span class="string">"MyTestPackage.MyTestExtension1"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>Extesion的声明应该被包裹在<code>&lt;extensions&gt;</code>标签下</p>
+<ul>
+<li><code>&lt;extensions&gt;</code>标签的<code>defaultExtensionNs</code>属性的值是对应Extension Point的插件id，但如果这个Extension Point由Intellij提供，则是“com.intellij”，插件的id可以在plugin.xml文件查看</li>
+<li>其中的标签的名字是Extension Point的name，例如要用到上面声明的Extension Point，则是<code>&lt;ConcreteExtensionPoint1&gt;</code></li>
+</ul>
+<p>这里内容很简单，就是实现接口，通过<code>implementation</code>属性提供接口</p>
+<h3 id="声明通过beanClass方式定义的Extension"><a href="#声明通过beanClass方式定义的Extension" class="headerlink" title="声明通过beanClass方式定义的Extension"></a>声明通过<code>beanClass</code>方式定义的Extension</h3><figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">extensions</span> <span class="attr">defaultExtensionNs</span>=<span class="string">"com.intellij"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">codeInsight.template.postfixTemplateProvider</span> <span class="attr">language</span>=<span class="string">"JAVA"</span> <span class="attr">implementationClass</span>=<span class="string">"com.kogitune.intellij.codeinsight.postfix.AndroidPostfixTemplateProvider"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这里language和implementationClass实际上是java bean的属性，下面是这个Extension Point的beanClass的内容</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LanguageExtensionPoint</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">CustomLoadingExtensionPointBean</span> <span class="keyword">implements</span> <span class="title">KeyedLazyInstance</span>&lt;<span class="title">T</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">  <span class="comment">// these must be public for scrambling compatibility</span></div><div class="line">  <span class="meta">@Attribute</span>(<span class="string">"language"</span>)</div><div class="line">  <span class="keyword">public</span> String language;</div><div class="line"></div><div class="line">  <span class="meta">@Attribute</span>(<span class="string">"implementationClass"</span>)</div><div class="line">  <span class="keyword">public</span> String implementationClass;</div><div class="line"></div><div class="line">  <span class="keyword">private</span> <span class="keyword">final</span> NotNullLazyValue&lt;T&gt; myHandler = <span class="keyword">new</span> NotNullLazyValue&lt;T&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="meta">@NotNull</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> T <span class="title">compute</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">return</span> (T)instantiateExtension(implementationClass, ApplicationManager.getApplication().getPicoContainer());</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line"></div><div class="line">  <span class="meta">@NotNull</span></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> T <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> myHandler.getValue();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getKey</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> language;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中language和implementationClass上加了<code>@Attribute</code>注解，加了这个注解的属性需要由Extension在声明时提供</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">codeInsight.template.postfixTemplateProvider</span> <span class="attr">language</span>=<span class="string">"JAVA"</span> <span class="attr">implementationClass</span>=<span class="string">"com.kogitune.intellij.codeinsight.postfix.AndroidPostfixTemplateProvider"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>一般情况下都是我们写的都是功能比较简单的小插件，除非是专门写插件的软件公司，否则很少情况下会在插件里定义Extension Point供别人使用，所以重点是怎样使用别人的Extension Point，尤其是系统提供的Extension Point，那可是系统的核心功能。（好吧是其实我不会写Extension Point（-_-））</p>
+<h3 id="通过Extension可以做什么？"><a href="#通过Extension可以做什么？" class="headerlink" title="通过Extension可以做什么？"></a>通过Extension可以做什么？</h3><p>先看三张图</p>
+<p><img src="./annotate.png" alt=""><br><img src="./livetemplate.gif" alt=""><br><img src="./postfixcompletion.gif" alt=""></p>
+<p>第一张图是代码编辑器的错误提示，第二张图是live template，第三张图是系统提供的postfix completion，相信这些功能我们平时都不少用，其实这些功能我们都可以通过Extension来自定义的！</p>
+<p>这里提供一个livetemplate的实例和推荐一个postfix completion的项目</p>
+<h3 id="live-template"><a href="#live-template" class="headerlink" title="live template"></a>live template</h3><p>想当年Eclipse用得飞起的时候“syso”打印字符串到控制台的代码补全用得非常顺手，刚转到Intellij平台的时候还有点不适应呢，现在借助live template我们也能实现一个Intellij版本的“syso”补全</p>
+<p>首先，找到Extension Point，这里的Extension Point是系统提供的<code>defaultLiveTemplatesProvider</code>，这样我们可以在plugin.xml中声明我们的Extension</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">extensions</span> <span class="attr">defaultExtensionNs</span>=<span class="string">"com.intellij"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- Add your extensions here --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">defaultLiveTemplatesProvider</span> <span class="attr">implementation</span>=<span class="string">"MyTemplateProvider"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">extensions</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>这个Extension Point是通过<code>interface</code>声明的，所以提供实现类<code>MyTemplateProvider</code>如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><div class="line"><span class="keyword">import</span> com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider;</div><div class="line"><span class="keyword">import</span> org.jetbrains.annotations.Nullable;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTemplateProvider</span> <span class="keyword">implements</span> <span class="title">DefaultLiveTemplatesProvider</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> String[] getDefaultLiveTemplateFiles() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String[]&#123;<span class="string">"templates/mytemplatefile"</span>&#125;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Nullable</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> String[] getHiddenLiveTemplateFiles() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String[<span class="number">0</span>];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>内容很简单，就是返回一个文件的路径，是相对于resources文件夹的相对路径，不要后缀名，绝对路径是 projectpath/resources/templates/mytemplatefile.xml</p>
+<p>也就是说我们只要在这个文件里按语法定义好live template就好了，重点也是在定义live template上，mytemplatefile.xml的内容如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">templateSet</span> <span class="attr">group</span>=<span class="string">"other"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">template</span> <span class="attr">name</span>=<span class="string">"syso"</span> <span class="attr">value</span>=<span class="string">"System.out.println($END$);"</span></span></div><div class="line"><span class="tag">              <span class="attr">description</span>=<span class="string">"Prints a string to System.out like Eclipse"</span></span></div><div class="line"><span class="tag">              <span class="attr">toReformat</span>=<span class="string">"false"</span> <span class="attr">toShortenFQNames</span>=<span class="string">"true"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">context</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">option</span> <span class="attr">name</span>=<span class="string">"JAVA_STATEMENT"</span> <span class="attr">value</span>=<span class="string">"true"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">context</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">templateSet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>一个<code>&lt;template&gt;</code>标签定义一个live template，name属性和value属性就是livetemplate的缩写和缩写展开对应的内容，这里只展示实现Extension的逻辑，具体怎样自定义live template可以参考相关文档<br><a href="https://www.jetbrains.com/help/idea/live-templates.html" target="_blank" rel="external">https://www.jetbrains.com/help/idea/live-templates.html</a></p>
+<p>下面是这个小demo的运行效果</p>
+<p><img src="./customlivetemplate.gif" alt=""></p>
+<h3 id="postfix-completion"><a href="#postfix-completion" class="headerlink" title="postfix completion"></a>postfix completion</h3><p>Android Studio和IDEA提供了一部分postfix completion，可惜的是并没有提过我们在IDE里自定义postfix completion的入口，但是可以通过插件增加自己的postfix completion，其原理也是利用系统的Extension Point</p>
+<p>有兴趣的朋友可以看看这个我参与的插件项目</p>
+<p><a href="https://github.com/takahirom/android-postfix-plugin" target="_blank" rel="external">android-postfix-plugin</a></p>
+<p>其中用到的Extension Point是<code>codeInsight.template.postfixTemplateProvider</code></p>
+<h2 id="问答"><a href="#问答" class="headerlink" title="问答"></a>问答</h2><ul>
+<li><p>系统有那么多的功能，我怎么知道它有没有Extension Point或者它的Extension Point是什么？</p>
+<p>  不用担心，Intellij的文档提供了下面的Extension Point列表</p>
+<ul>
+<li><a href="https://upsource.jetbrains.com/idea-ce/file/idea-ce-d00d8b4ae3ed33097972b8a4286b336bf4ffcfab/platform/platform-resources/src/META-INF/LangExtensionPoints.xml" target="_blank" rel="external">LangExtensionPoints.xml</a></li>
+<li><a href="https://upsource.jetbrains.com/idea-ce/file/idea-ce-d00d8b4ae3ed33097972b8a4286b336bf4ffcfab/platform/platform-resources/src/META-INF/PlatformExtensionPoints.xml" target="_blank" rel="external">PlatformExtensionPoints.xml</a></li>
+<li><a href="https://upsource.jetbrains.com/idea-ce/file/idea-ce-d00d8b4ae3ed33097972b8a4286b336bf4ffcfab/platform/platform-resources/src/META-INF/VcsExtensionPoints.xml" target="_blank" rel="external">VcsExtensionPoints.xml</a></li>
+</ul>
+</li>
+<li><p>有Extension Point，但是不会用怎么办？</p>
+<p>  查看其他插件的源码，例如那些提供智能补全的插件，都是通过系统的Extension Point完成的，所以可以推测一下自己常用的插件里有没有自己需要使用的Extension Point来学习怎样使用</p>
+</li>
+</ul>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2017/09/17/Android-Studio插件开发2之Action-System/" data-toggle="tooltip" data-placement="top"
+                           title="Android Studio插件开发2之Action System">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDk4OS83NTM4">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+                </div>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#定义"><span class="toc-text">定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Extension-points"><span class="toc-text">Extension points</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extensions"><span class="toc-text">Extensions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关系图"><span class="toc-text">关系图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#声明Extension和Extension-Point"><span class="toc-text">声明Extension和Extension Point</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Extension-Point"><span class="toc-text">Extension Point</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Extension"><span class="toc-text">Extension</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#声明通过interface方式定义的Extension"><span class="toc-text">声明通过interface方式定义的Extension</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#声明通过beanClass方式定义的Extension"><span class="toc-text">声明通过beanClass方式定义的Extension</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例"><span class="toc-text">实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过Extension可以做什么？"><span class="toc-text">通过Extension可以做什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#live-template"><span class="toc-text">live template</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#postfix-completion"><span class="toc-text">postfix completion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#问答"><span class="toc-text">问答</span></a></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Android Studio插件开发"
+                           title="Android Studio插件开发">Android Studio插件开发</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/CAxlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/axl-chenone">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/Axlchen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Axlchen 2017
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://axlchen.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    var _baId = '88fbc32936e8b8a463853c518c838608';
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?" + _baId;
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="http://7xlhug.com1.z0.glb.clouddn.com/portrait.jpg">
+</body>
+
+</html>

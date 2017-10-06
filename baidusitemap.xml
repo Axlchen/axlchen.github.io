@@ -4,6 +4,49 @@
 
     
   <url>
+    <loc>https://axlchen.github.io/2017/10/06/Android-Studio%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%913%E4%B9%8BExtensions-And-Extension-Points-%E6%89%A9%E5%B1%95%E4%B8%8E%E6%89%A9%E5%B1%95%E7%82%B9/</loc>
+    <lastmod>2017-10-06T05:19:57.000Z</lastmod>
+    <data>
+        <display>
+        <title>Android Studio插件开发3之Extensions And Extension Points(扩展与扩展点)</title>
+        <pubTime>2017-10-06T05:16:41.000Z</pubTime>
+        
+        <tag>Android Studio插件开发</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android Studio/Intellij IDEA 插件开发" url="https://axlchen.github.io/categories/Android-Studio-Intellij-IDEA-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://axlchen.github.io/2017/08/13/%E5%9F%BA%E4%BA%8EGlide-v4-x%E7%9A%84%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E8%BF%9B%E5%BA%A6%E7%9B%91%E5%90%AC/</loc>
+    <lastmod>2017-09-23T14:46:36.000Z</lastmod>
+    <data>
+        <display>
+        <title>基于Glide v4.x的图片加载进度监听</title>
+        <pubTime>2017-08-13T07:48:23.000Z</pubTime>
+        
+        <tag>glide</tag>
+         
+        <tag>图片加载</tag>
+         
+         
+           
+             
+              <breadCrumb title="Android" url="https://axlchen.github.io/categories/Android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
     <loc>https://axlchen.github.io/2017/09/17/Android-Studio%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%912%E4%B9%8BAction-System/</loc>
     <lastmod>2017-09-23T14:27:39.000Z</lastmod>
     <data>
@@ -97,29 +140,6 @@
            
              
               <breadCrumb title="其他" url="https://axlchen.github.io/categories/%E5%85%B6%E4%BB%96/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-    
-  <url>
-    <loc>https://axlchen.github.io/2017/08/13/%E5%9F%BA%E4%BA%8EGlide-v4-x%E7%9A%84%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E8%BF%9B%E5%BA%A6%E7%9B%91%E5%90%AC/</loc>
-    <lastmod>2017-09-03T13:02:51.000Z</lastmod>
-    <data>
-        <display>
-        <title>基于Glide v4.x的图片加载进度监听</title>
-        <pubTime>2017-08-13T07:48:23.000Z</pubTime>
-        
-        <tag>glide</tag>
-         
-        <tag>图片加载</tag>
-         
-         
-           
-             
-              <breadCrumb title="Android" url="https://axlchen.github.io/categories/Android/"/>
           
         </display>
     </data>
